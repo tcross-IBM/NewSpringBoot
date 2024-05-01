@@ -2,8 +2,6 @@ package com.EmployeeApp.model;
 
 import java.sql.Date;
 
-import javax.annotation.processing.Generated;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
