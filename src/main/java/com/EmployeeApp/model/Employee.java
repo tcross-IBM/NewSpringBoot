@@ -1,15 +1,15 @@
 package com.EmployeeApp.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Employee")
+@Document(collection = "employees")
 public class Employee {
 	
 	@Id
-	private int UID;
+	private String id;
 		 
 	private String fname;
 		 
@@ -25,9 +25,9 @@ public class Employee {
 	public Employee() {
 	}
 
-	public Employee(int uID, String fname, String mname, String lname, Date dob, String position) {
+	public Employee(String iD, String fname, String mname, String lname, Date dob, String position) {
 		super();
-		UID = uID;
+		id = iD;
 		this.fname = fname;
 		this.mname = mname;
 		this.lname = lname;
@@ -35,12 +35,14 @@ public class Employee {
 		this.position = position;
 	}
 
-	public int getUID() {
-		return UID;
+
+	
+	public String getId() {
+		return id;
 	}
 
-	public void setUID(int uID) {
-		UID = uID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getFname() {
