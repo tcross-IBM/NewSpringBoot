@@ -1,0 +1,38 @@
+.box::-webkit-input-placeholder { /* WebKit browsers */
+    color:    rgb(255, 0, 0);
+}
+.box::-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    rgb(255, 0, 0);
+}
+.box::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    rgb(255, 0, 0);
+}
+.box::-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    rgb(255, 0, 0);
+}
+input {
+	width: 300px;
+	margin: 1%;
+	align-items: stretch;
+}
+button {
+	margin: 1%;
+}
+.box{
+	margin-right: 100%;
+}
+.empty{
+	color:red;
+}
+.custom-select {
+  min-width: 310px;
+  margin-left: 0.9%;
+  margin-top:  0.8%;
+  background-color: #fff;
+  border: 0.8px solid #000;
+  border-radius: 0.1rem;
+  cursor: pointer;
+  padding: 0.2em;
+  display: flex;
+  
+}

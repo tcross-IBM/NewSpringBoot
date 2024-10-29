@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee Management System</title>
+<link rel="stylesheet" type="text/css" media="all"  
+    href="/css/index.css"
+    th:href="@{/css/index.css}"/>
+</head>
+
+
+
+<body onload="javascript:checkIfUpdate(employee)">
+	        <!-- defines logout icon and role !-->
+
+    <div class="container">
+		<div align="right" id="roles">
+			<a th:href="@{/logout}" class="btn btn-primary btn-sm mb-3" style=" border-color: white; background-color: white;" 
+			onclick='return confirm("Are you sure you want to log out?");'><img width="60" th:src="@{https://static.vecteezy.com/system/resources/previews/006/606/705/non_2x/sign-out-logout-icon-in-circle-line-vector.jpg}"/></a>	
+		</div>
+        <h1>Employee Management System</h1>
+        <hr>
+        <h2 id="type"></h2>
+        
+        <script th:inline="javascript">
+			function checkIfUpdate(employee){
+				type = document.getElementById('type');
+				if(employee.value.length == 0){
+					document.getElementById('content').remove();
+					add = "Save Employee";
+					type.insertAdjacentHTML('afterbegin', add);
+				}
+				else{
+					add = "Update Employee";
+					type.insertAdjacentHTML('afterbegin', add);
+				}
+			}
+			function checkInput(fname, lname, dob, position) {
+				const date = new Date();
+				var DOB = new Date(dob.value);
+				const lowestDate = new Date();
+				const highestDate = new Date();
+				// add one day to date since for some reason , date is 1 day behind
+				DOB.setDate(DOB.getDate() + 1);
+				
+				errorMessage = "";
+				returnFalse = false;
+				
+				//worker has be older than 13 and less than 100
+				lowestDate.setFullYear(lowestDate.getFullYear() - 100);
+				highestDate.setFullYear(highestDate.getFullYear() - 13);
+				
+				//concat all variables to see if any unallowed characters in name
+				allLetters = (fname.value + mname.value + lname.value + position.value);
+				
+				//characters not allowed
+				var format = new RegExp(/[^a-zA-Z ]/);				
+				
+				//birth date 
+				if(DOB > date || DOB < lowestDate || DOB > highestDate){
+					errorMessage += "\nPlease enter valid birthdate";
+					returnFalse = true;
+				}
+				
+				//check for unallowed symbols
+				if(format.test(allLetters)){
+					errorMessage += "\nPlease only use standard alpha characters";
+					returnFalse = true;
+				}
+				if(fname.value == "" || lname.value == "" || position.value == "" || dob.value == ""){ //if above is false then a field is null
+					errorMessage += "\nPlease fill all required fields in red";
+					returnFalse = true;
+				}
+				
+				//if all errors were false above, add to DB
+				if(!returnFalse){				
+					//alert("dob.value = " + DOB.toLocaleDateString('en-US') +  "date.toLocaleDateString('en-US') = " + date.toLocaleDateString('en-US'));	
+					if(document.getElementById('content') == null){
+						alert(fname.value + " " + lname.value + " has been added to the DB.");
+					}
+					else{
+						alert("Employee has been updated!");
+					}
+					return true;
+				}
+				else{
+					alert(errorMessage);
+					return false;
+				}
+				
+				function logOutConfirmation() {
+					 answer = confirm("Are you sure you want to log out?"); 
+					 return answer;
+				 }
+			}
+			
+		</script>
+		
+		<!-- Used to store employee object !--> , 
+		<input type="hidden" id="employee" th:value="${employee.id}"/>
+
+        <form action="#" th:action="@{/save}" th:object="${employee}" id="employeeInput" onsubmit="return checkInput(fname, lname, dob, position);"
+            method="POST" >
+            
+            
+            <input id="content" type="hidden" th:field="*{id}"/>
+
+            
+            <input type="text"
+            	th:field="*{fname}" placeholder="First Name" 
+                class="box" maxlength="35">     
+            <input type="text"
+                th:field="*{mname}" placeholder="Middle Name" maxlength="35">
+            <input type="text"
+                th:field="*{lname}" placeholder="Last Name"
+                class="box" maxlength="35">
+           <input type="date" th:field="*{dob}"
+           		class="empty">
+            <input type="text" 
+            	th:field="*{position}" placeholder="Job Title"
+            	class="box" maxlength="35">             
+            <input type="email" 
+            	th:field="*{email}" placeholder="Email"
+            	class="box" maxlength="35" required>  
+		 	<select th:field="*{role}" maxlength="35" class="custom-select" >
+				<option th:value="USER">USER</option>
+		        <option th:value="ADMIN">ADMIN</option>
+		    </select>
+		    <input id="content" type="hidden" th:field="*{username}"/>
+		    <input id="content" type="hidden" th:field="*{password}"/>
+		    
+            <button type="submit" class="btn btn-info col-2">Save
+                Employee</button>
+        </form>
+ 
+        <hr>
+ 
+        <a th:href="@{/}"> Back to Employee List</a>
+    </div>
+</body>
+</html>

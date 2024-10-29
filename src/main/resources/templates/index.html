@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee</title>
+<link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+</head>
+<body>
+<div class="container my-2" align="center">
+	
+ <script th:inline="javascript">
+	 function confirmation(employee){
+		 if(employee.value.length <= 2){
+			 alert("ERROR: no employees to delete")
+			 return false;
+		 }
+		 answer = confirm("Are you sure you want to delete ALL employees?"); 
+		 return answer;
+	 }
+	 function employeeConfirmation(){
+		 answer = confirm("Are you sure you want to delete this employee from the DB?"); 
+		 return answer;
+	 }
+	 function logOutConfirmation() {
+		 answer = confirm("Are you sure you want to log out?"); 
+		 return answer;
+	 }
+ </script>
+ 
+<!-- Used to store employee object !-->
+<input type="hidden" id="employee" th:value="${allemplist}"/>
+
+<!-- defines logout icon and role !-->
+<div align="right" id="roles">
+	<a th:href="@{/logout}" class="btn btn-primary btn-sm mb-3" style="border-color: white; background-color: white;" 
+	onclick="return logOutConfirmation();"><img width="60" th:src="@{https://static.vecteezy.com/system/resources/previews/006/606/705/non_2x/sign-out-logout-icon-in-circle-line-vector.jpg}"/></a>
+	<div sec:authorize="hasRole('ROLE_USER')" style = "float:left;"  alt="logout"> current role: <font color=red> user </font> </div> 
+	<div sec:authorize="hasRole('ROLE_ADMIN')" style = "float:left;" alt="logout"> current role: <font color=red> admin </font> </div> 
+</div>
+ 
+<h3>Employee List</h3>
+<!-- disable if  role != admin !-->
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+	<a th:href="@{/addemployee}" class="btn btn-primary btn-sm mb-3" >Add Employee</a>
+	<a th:href="@{/deleteAllEmployees}" class="btn btn-primary btn-sm mb-3" style="background-color: red;" 
+   		onclick="return confirmation(employee);">Delete All</a>
+</div>
+    <table style="width:80%" border="1"
+           class = "table table-striped table-responsive-md">
+    <thead>
+  <tr>
+    <th>Name</th>
+    <th>Date of Birth</th>
+    <th>Job Title</th>
+  </tr>
+  </thead>
+  <tbody>
+	  <tr th:each="employee:${allemplist}">
+	        <td>  <span th:text="${employee.fname}"></span>
+	        	<span th:text="${employee.mname}"></span>
+	        	<span th:text="${employee.lname}" ></span>  
+	        </td> 
+	        <td> <span th:text="${#dates.format(employee.dob, 'MMM dd yyyy')}"></span> 
+			</td>
+	        <td> <span th:text="${employee.position}"></span> 
+			</td>
+	        <td sec:authorize="hasRole('ROLE_ADMIN')"> <a th:href="@{/addemployee/{id}(id=${employee.id})}"
+	                class="btn btn-primary">Update</a>
+	                <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}"
+	                class="btn btn-danger" onclick="return employeeConfirmation();">Delete</a>
+	    	</td>
+	  </tr>
+  </tbody>
+</table>
+</div>
+</body>
+</html>

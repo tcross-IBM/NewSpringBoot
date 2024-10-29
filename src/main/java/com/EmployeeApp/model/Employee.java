@@ -4,8 +4,15 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 
 @Document(collection = "employees")
+@JsonPropertyOrder({"id", "fname", "mname", "lname", "dob", "position"})
 public class Employee {
 	
 	@Id
@@ -16,16 +23,26 @@ public class Employee {
 	private String mname;
 		 
 	private String lname;
-		 
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dob;
 		 
 	private String position;
+	
+	private ERole role;
+	
+	@Email(message = "Please provide a valid email address")
+	private String email;
+	
+	@Column(unique = true)
+    private String username;
+    private String password;
 		 
 
 	public Employee() {
 	}
 
-	public Employee(String iD, String fname, String mname, String lname, Date dob, String position) {
+	public Employee(String iD, String fname, String mname, String lname, Date dob, String position, ERole role, String email, String username, String password) {
 		super();
 		id = iD;
 		this.fname = fname;
@@ -33,6 +50,10 @@ public class Employee {
 		this.lname = lname;
 		this.dob = dob;
 		this.position = position;
+		this.role = role;
+		this.email = email;
+		this.username = username;
+		this.password = password;
 	}
 
 
@@ -83,6 +104,38 @@ public class Employee {
 
 	public void setPosition(String position) {
 		this.position = position;
+	}
+
+	public ERole getRole() {
+		return role;
+	}
+
+	public void setRole(ERole role) {
+		this.role = role;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	 
 	 
