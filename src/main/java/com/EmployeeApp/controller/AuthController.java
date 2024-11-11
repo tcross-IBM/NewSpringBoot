@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 //import com.EmployeeApp.entity.ERole;
 //import com.EmployeeApp.entity.Role;
-import com.EmployeeApp.entity.User;
+
 import com.EmployeeApp.model.Employee;
 import com.EmployeeApp.repository.EmployeeRepository;
 //import com.EmployeeApp.repository.RoleRepository;

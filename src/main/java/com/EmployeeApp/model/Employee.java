@@ -31,11 +31,10 @@ public class Employee {
 	
 	private ERole role;
 	
+	@Column(unique = true)
 	@Email(message = "Please provide a valid email address")
 	private String email;
 	
-	@Column(unique = true)
-    private String username;
     private String password;
 		 
 
@@ -52,10 +51,9 @@ public class Employee {
 		this.position = position;
 		this.role = role;
 		this.email = email;
-		this.username = username;
 		this.password = password;
 	}
-
+	
 
 	
 	public String getId() {
@@ -120,14 +118,6 @@ public class Employee {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getPassword() {

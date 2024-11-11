@@ -97,7 +97,7 @@
 			
 		</script>
 		
-		<!-- Used to store employee object !--> , 
+		<!-- Used to store employee object !-->  
 		<input type="hidden" id="employee" th:value="${employee.id}"/>
 
         <form action="#" th:action="@{/save}" th:object="${employee}" id="employeeInput" onsubmit="return checkInput(fname, lname, dob, position);"
@@ -127,7 +127,6 @@
 				<option th:value="USER">USER</option>
 		        <option th:value="ADMIN">ADMIN</option>
 		    </select>
-		    <input id="content" type="hidden" th:field="*{username}"/>
 		    <input id="content" type="hidden" th:field="*{password}"/>
 		    
             <button type="submit" class="btn btn-info col-2">Save

@@ -27,14 +27,11 @@
 		<form action="#" th:action="@{/updateEmployee}" id="userInput" 
 			method="POST" >
 		
-		    <input type="text"
-		    	th:value="${username}"  placeholder="username" name ="username"
-		        class="box" maxlength="35">    
 		    <input type="email" placeholder="email"  name="email"
-		        th:value="${email}" maxlength="35" >
+		        th:value="${email}" maxlength="35" required>
 		    <input type="password" 
 		        th:value="${password}"  placeholder="password"  name ="password"
-		        class="box" maxlength="35">
+		        class="box" maxlength="35" required>
 		    <button type="submit" class="btn btn-info col-2" >Register</button>
 		</form>
 		        

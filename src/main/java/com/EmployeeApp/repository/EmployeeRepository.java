@@ -11,5 +11,11 @@ import com.EmployeeApp.model.Employee;
 @Repository
 public interface EmployeeRepository extends MongoRepository<Employee, String>{
 	Employee findByEmail(String email);
-	Optional<Employee> findByUsername(String username);
+	default void saveIfNotExist(Employee employee) {
+		if(findByEmail(employee.getEmail()) == null) {
+			System.out.println("username not found");
+			save(employee);
+		}
+	}
+	Employee findByEmailIgnoreCase(String username);
 }

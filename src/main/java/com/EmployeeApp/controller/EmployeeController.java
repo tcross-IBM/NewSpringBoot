@@ -3,10 +3,14 @@ package com.EmployeeApp.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,12 +22,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.EmployeeApp.model.ERole;
 import com.EmployeeApp.model.Employee;
 import com.EmployeeApp.repository.EmployeeRepository;
+import com.EmployeeApp.services.CustomUserDetailsService;
+import com.EmployeeApp.services.EmployeeService;
 
 //@RestController
 @Controller
@@ -32,6 +40,10 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
+	@Autowired
+	private EmployeeService employeeService;
+	
+
 	
 	public EmployeeController() {
 		
@@ -130,25 +142,37 @@ public class EmployeeController {
  
     @GetMapping("/deleteEmployee/{id}")
     public String deleteThroughId(@PathVariable(value = "id") String id) {
-    	this.employeeRepository.deleteById(id);
+    	Optional<Employee> employee = this.employeeRepository.findById(id);
+    	if(employee.get().getEmail() == "admin"){
+    		this.employeeRepository.deleteById(id);
+    	}
+    	
+    	
 //        return "redirect:/index";
         return "redirect:/";
     }
     @GetMapping("/deleteAllEmployees")
     public String deleteAll() {
     	this.employeeRepository.deleteAll();
+    	
+		//after delete create admin user again
+        Employee employee = new Employee();
+        employee.setEmail("admin");
+        employee.setPassword(new BCryptPasswordEncoder().encode("password"));
+        employee.setRole(ERole.ADMIN);
+        employeeRepository.save(employee);
+
         //return "redirect:/index";
     	return "redirect:/";
     }
     
     //DONT FORGET TO ALSO ACCEPT LOWERCASE 
     @PostMapping("/updateEmployee")
-    public String addToEmployee(String username, String password, String email, Model model, RedirectAttributes redirectAttributes) {
+    public String addToEmployee(String password, String email, Model model, RedirectAttributes redirectAttributes) {
     	Employee employee = this.employeeRepository.findByEmail(email.toLowerCase());
-    	if (employee != null) {
+    	if (employee != null && employee.getPassword().isBlank()) {
     		try {
-	    		employee.setUsername(username);
-	    		employee.setPassword(password);
+	    		employee.setPassword(new BCryptPasswordEncoder().encode(password));
 	//    		model.addAttribute("employee", employee);
 	    		employeeRepository.save(employee); 
 	    		
@@ -160,8 +184,32 @@ public class EmployeeController {
     			System.out.println(e.toString());
     		}
     	}
-    	redirectAttributes.addFlashAttribute("failureMessage", "User not created due to error");
+    	if(employee == null) {
+    		redirectAttributes.addFlashAttribute("failureMessage", "Email does not exist in DB");
+    	}
+    	else if(employee.getPassword().isBlank()) {
+    		redirectAttributes.addFlashAttribute("failureMessage", "Email already registered, if you forgot password click forgot password hyperlink on login page");
+    	}
+    	else {
+    		redirectAttributes.addFlashAttribute("failureMessage", "User not created due to error");
+    	}
+    	
     	return "redirect:/register";
+    }
+    
+    @GetMapping("/forgotpassword")
+    public String forgotPassword() {
+    	return "forgotpassword";
+    }
+    
+    @PostMapping("/forgotpassword")
+    public String forgotPasswordProcess(@RequestParam String email) {
+    	String output = "";
+    	output = employeeService.sendPasswordResetEmail(email);
+		if (!output.equals("failure")) {
+			return "redirect:/forgotPassword?success";
+		}
+		return "redirect:/login?error";
     }
     
 //    @GetMapping("/updateEmployee")
