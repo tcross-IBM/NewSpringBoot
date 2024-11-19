@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +54,6 @@ import com.EmployeeApp.services.CustomUserDetailsService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -147,10 +147,31 @@ public class SecurityConfiguration {
 	    return new BCryptPasswordEncoder();
 	}
 	
-    @Bean
-    public JavaMailSender javaMailSender() {
-        return new JavaMailSenderImpl();
-    }
+ 
+	
+//	
+//    @Bean
+//    public static JavaMailSenderImpl javaMailSender() {
+//        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+
+//        javaMailSender.setProtocol("smtp");
+//        javaMailSender.setHost("smtp.gmail.com");
+//        javaMailSender.setPort(587);
+//        
+//        javaMailSender.setUsername("**********");
+//        javaMailSender.setPassword("*********");
+        
+//        Properties mailProperties = new Properties();
+//        mailProperties.put("mail.smpt.starttls.enable", true);
+//        mailProperties.put("mail.smtp.starttls.required", true);
+//        mailProperties.put("mail.smtp.auth", true);
+//        
+//        javaMailSender.setJavaMailProperties(mailProperties);
+//
+//        return javaMailSender;
+//    }
+	
+
 	
 //
 

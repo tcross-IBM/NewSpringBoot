@@ -11,6 +11,7 @@ import com.EmployeeApp.model.Employee;
 @Repository
 public interface EmployeeRepository extends MongoRepository<Employee, String>{
 	Employee findByEmail(String email);
+	Employee findByToken(String token);
 	default void saveIfNotExist(Employee employee) {
 		if(findByEmail(employee.getEmail()) == null) {
 			System.out.println("username not found");

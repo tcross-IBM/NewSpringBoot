@@ -36,12 +36,15 @@ public class Employee {
 	private String email;
 	
     private String password;
+    
+    @Column(unique = true)
+    private String token;
 		 
 
 	public Employee() {
 	}
 
-	public Employee(String iD, String fname, String mname, String lname, Date dob, String position, ERole role, String email, String username, String password) {
+	public Employee(String iD, String fname, String mname, String lname, Date dob, String position, ERole role, String email, String username, String password, String token) {
 		super();
 		id = iD;
 		this.fname = fname;
@@ -52,6 +55,7 @@ public class Employee {
 		this.role = role;
 		this.email = email;
 		this.password = password;
+		this.token = token;
 	}
 	
 
@@ -126,6 +130,14 @@ public class Employee {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 	 
 	 

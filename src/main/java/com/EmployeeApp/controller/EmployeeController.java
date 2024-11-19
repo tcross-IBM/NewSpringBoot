@@ -147,7 +147,6 @@ public class EmployeeController {
     		this.employeeRepository.deleteById(id);
     	}
     	
-    	
 //        return "redirect:/index";
         return "redirect:/";
     }
@@ -166,7 +165,6 @@ public class EmployeeController {
     	return "redirect:/";
     }
     
-    //DONT FORGET TO ALSO ACCEPT LOWERCASE 
     @PostMapping("/updateEmployee")
     public String addToEmployee(String password, String email, Model model, RedirectAttributes redirectAttributes) {
     	Employee employee = this.employeeRepository.findByEmail(email.toLowerCase());
@@ -203,13 +201,29 @@ public class EmployeeController {
     }
     
     @PostMapping("/forgotpassword")
-    public String forgotPasswordProcess(@RequestParam String email) {
+    public String forgotPasswordProcess(@RequestParam String email, RedirectAttributes redirectAttributes) {
     	String output = "";
     	output = employeeService.sendPasswordResetEmail(email);
-		if (!output.equals("failure")) {
-			return "redirect:/forgotPassword?success";
+		if (!output.equals("failure")){
+			Employee employee = this.employeeRepository.findByEmail(email.toLowerCase());
+			employee.setToken(output);
+			employeeRepository.save(employee);	
+			redirectAttributes.addFlashAttribute("successMessage", "Email sent successfully!");
+			return "redirect:/login";
 		}
-		return "redirect:/login?error";
+		redirectAttributes.addFlashAttribute("failureMessage", "Email not found. Please try again.");
+		return "redirect:/forgotpassword";
+    }
+    
+    @GetMapping("/forgotpassword/{token}")
+    public String forgotPasswordToken(@PathVariable(value = "token") String token, RedirectAttributes redirectAttributes) {
+    	System.out.println("/n /n /n  ******************************");
+        Employee employee = this.employeeRepository.findByToken(token);
+        System.out.println("email = " + employee.getEmail());
+        employee.setPassword(null);
+    	this.employeeRepository.save(employee);
+    	redirectAttributes.addFlashAttribute("successMessage", "Password reset");
+		return "redirect:/login";
     }
     
 //    @GetMapping("/updateEmployee")
